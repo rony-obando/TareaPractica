@@ -109,8 +109,21 @@ namespace practicaDepreciacion
         {
             if (e.RowIndex >= 0)
             {
-                FrmDepreciacion depreciacion = new FrmDepreciacion(activoServices.Read()[e.RowIndex]);
-                depreciacion.ShowDialog();
+                Activo activo = new Activo()
+                {
+                    Id = int.Parse(textBox1.Text),
+                    /*Nombre = txtNombre.Text,
+                    Valor = double.Parse(txtValor.Text),
+                    ValorResidual = double.Parse(txtValorR.Text),
+                    VidaUtil = int.Parse(txtVidaU.Text)*/
+                    
+                };
+                textBox1.Text = "";
+                activoServices.Delete(activo);
+                //lo de abajo estaba antes(abria formulario depreciacion)///////////////////////////////////
+                /*FrmDepreciacion depreciacion = new FrmDepreciacion(activoServices.Read()[e.RowIndex]);
+                depreciacion.ShowDialog();*/
+
             }
         }
 

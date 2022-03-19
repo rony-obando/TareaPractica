@@ -25,6 +25,10 @@ namespace Infraestructure.Repository
         {
             get => File.Open($"{fileName}.hd", FileMode.OpenOrCreate, FileAccess.ReadWrite);
         }
+        public Stream TemporalStream
+        {
+            get => File.Open($"{fileName}.tp", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        }
 
         public Stream DataStream
         {
@@ -208,7 +212,7 @@ namespace Infraestructure.Repository
         public List<T> GetAll<T>()
         {
             List<T> listT = new List<T>();
-            int n = 0;
+            int k = 0,n=0;
             try
             {
                 using (BinaryReader brHeader = new BinaryReader(HeaderStream))
@@ -285,6 +289,150 @@ namespace Infraestructure.Repository
             }
             
             return listT;
+        }
+        public void Update<T>(T t)
+        {
+            int Id = (int)t.GetType().GetProperty("Id").GetValue(t);
+            using (BinaryReader brHeader = new BinaryReader(HeaderStream),
+                                brData = new BinaryReader(DataStream))
+            {
+                int n, k;
+                brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
+                if (brHeader.BaseStream.Length == 0)
+                {
+                    n = 0;
+                    k = 0;
+                    return;
+                }
+                n = brHeader.ReadInt32();
+                k = brHeader.ReadInt32();
+
+                using (BinaryWriter bwHeader = new BinaryWriter(HeaderStream),
+                                   bwData = new BinaryWriter(DataStream))
+                {
+                    PropertyInfo[] propertyInfo = t.GetType().GetProperties();
+                    long posh = 8 + (Id - 1) * 4;
+                    brHeader.BaseStream.Seek(posh, SeekOrigin.Begin);
+                    long index = brHeader.ReadInt32();
+                    long posd = (index - 1) * size;
+                    bwData.BaseStream.Seek(posd, SeekOrigin.Begin);
+                    foreach (PropertyInfo pinfo in propertyInfo)
+                    {
+                        Type type = pinfo.PropertyType;
+                        object obj = pinfo.GetValue(t, null);
+
+                        if (type.IsGenericType)
+                        {
+                            continue;
+                        }
+                        if (type == typeof(int))
+                        {
+                            bwData.Write((int)obj);
+                        }
+                        else if (type == typeof(long))
+                        {
+                            bwData.Write((long)obj);
+                        }
+                        else if (type == typeof(float))
+                        {
+                            bwData.Write((float)obj);
+                        }
+                        else if (type == typeof(double))
+                        {
+                            bwData.Write((double)obj);
+                        }
+                        else if (type == typeof(decimal))
+                        {
+                            bwData.Write((decimal)obj);
+                        }
+                        else if (type == typeof(char))
+                        {
+                            bwData.Write((char)obj);
+                        }
+                        else if (type == typeof(bool))
+                        {
+                            bwData.Write((bool)obj);
+                        }
+                        else if (type == typeof(string))
+                        {
+                            bwData.Write((string)obj);
+                        }
+                    }
+                }
+            }
+        }
+        public void Delete<T>(T t)
+        {
+            try
+            {
+                int Id = (int)t.GetType().GetProperty("Id").GetValue(t);
+                int n = 0;
+                using (BinaryReader brHeader = new BinaryReader(HeaderStream))
+                {
+                        if (brHeader.BaseStream.Length > 0)
+                        {
+                            brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
+                            n = brHeader.ReadInt32();
+                        }
+
+                }
+                List<int> Ids = new List<int>();
+                for (int i = 0; i < n; i++)
+                {
+                    int index;
+                    using (BinaryReader brHeader = new BinaryReader(HeaderStream))
+                    {
+                        long posh = 8 + i * 4;
+                        brHeader.BaseStream.Seek(posh, SeekOrigin.Begin);
+                        index = brHeader.ReadInt32();
+                    }
+                    Ids.Add(index);
+                }
+                int a = Ids.Count;
+               /* for(int i in a)
+                {*/
+                    if (Ids.Contains(Id))
+                    {
+                        Ids.Remove(Id);
+                    }
+                //}
+                for (int i = 0; i < n; i++)
+                {
+                    if (i != Id - 1)
+                    {
+
+
+                        using (BinaryWriter bwTemporal = new BinaryWriter(TemporalStream))
+                        {
+                            
+                            if (i >= Id-1)
+                            {
+                                long posh = 8 + (--i) * 4;
+                                bwTemporal.BaseStream.Seek(posh, SeekOrigin.Begin);
+                                bwTemporal.Write(++i);
+                                bwTemporal.BaseStream.Seek(0, SeekOrigin.Begin);
+                                bwTemporal.Write(--i);
+                            }
+                            else
+                            {
+                                long posh = 8 + (i) * 4;
+                                bwTemporal.BaseStream.Seek(posh, SeekOrigin.Begin);
+                                bwTemporal.Write(++i);
+                                bwTemporal.BaseStream.Seek(0, SeekOrigin.Begin);
+                                bwTemporal.Write(++i);
+                            }
+                            bwTemporal.Write(++i);
+                        }
+                    }
+                }
+                File.Delete($"{fileName}.hd");
+                File.Copy($"{fileName}.tp", $"{fileName}.hd");
+            }
+            catch (IOException)
+            {
+                throw;
+            }
+
         }
     }
 }

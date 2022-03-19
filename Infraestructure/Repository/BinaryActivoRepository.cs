@@ -32,8 +32,15 @@ namespace Infraestructure.Repository
 
         public void Delete(Activo t)
         {
-            
-            
+            try
+            {
+                context.Delete<Activo>(t);
+            }
+            catch (IOException)
+            {
+                throw;
+            }
+
         }
 
         public Activo GetById(int id)

@@ -38,14 +38,16 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // txtEnviar
             // 
-            this.txtEnviar.Location = new System.Drawing.Point(107, 255);
+            this.txtEnviar.Location = new System.Drawing.Point(143, 314);
+            this.txtEnviar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtEnviar.Name = "txtEnviar";
-            this.txtEnviar.Size = new System.Drawing.Size(75, 23);
+            this.txtEnviar.Size = new System.Drawing.Size(100, 28);
             this.txtEnviar.TabIndex = 0;
             this.txtEnviar.Text = "Enviar";
             this.txtEnviar.UseVisualStyleBackColor = true;
@@ -53,88 +55,105 @@
             // 
             // txtNombre
             // 
-            this.txtNombre.Location = new System.Drawing.Point(122, 43);
+            this.txtNombre.Location = new System.Drawing.Point(163, 53);
+            this.txtNombre.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtNombre.Name = "txtNombre";
-            this.txtNombre.Size = new System.Drawing.Size(100, 20);
+            this.txtNombre.Size = new System.Drawing.Size(132, 22);
             this.txtNombre.TabIndex = 1;
             this.txtNombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtNombre_KeyPress);
             this.txtNombre.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtNombre_KeyUp);
             // 
             // txtValor
             // 
-            this.txtValor.Location = new System.Drawing.Point(122, 89);
+            this.txtValor.Location = new System.Drawing.Point(163, 110);
+            this.txtValor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtValor.Name = "txtValor";
-            this.txtValor.Size = new System.Drawing.Size(100, 20);
+            this.txtValor.Size = new System.Drawing.Size(132, 22);
             this.txtValor.TabIndex = 2;
             this.txtValor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtValor_KeyPress_1);
             // 
             // txtValorR
             // 
-            this.txtValorR.Location = new System.Drawing.Point(122, 136);
+            this.txtValorR.Location = new System.Drawing.Point(163, 167);
+            this.txtValorR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtValorR.Name = "txtValorR";
-            this.txtValorR.Size = new System.Drawing.Size(100, 20);
+            this.txtValorR.Size = new System.Drawing.Size(132, 22);
             this.txtValorR.TabIndex = 3;
             this.txtValorR.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtValorR_KeyPress);
             // 
             // txtVidaU
             // 
-            this.txtVidaU.Location = new System.Drawing.Point(122, 177);
+            this.txtVidaU.Location = new System.Drawing.Point(163, 218);
+            this.txtVidaU.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtVidaU.Name = "txtVidaU";
-            this.txtVidaU.Size = new System.Drawing.Size(100, 20);
+            this.txtVidaU.Size = new System.Drawing.Size(132, 22);
             this.txtVidaU.TabIndex = 4;
             this.txtVidaU.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtVidaU_KeyPress);
             // 
             // Nombre
             // 
             this.Nombre.AutoSize = true;
-            this.Nombre.Location = new System.Drawing.Point(57, 43);
+            this.Nombre.Location = new System.Drawing.Point(76, 53);
+            this.Nombre.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Nombre.Name = "Nombre";
-            this.Nombre.Size = new System.Drawing.Size(44, 13);
+            this.Nombre.Size = new System.Drawing.Size(56, 16);
             this.Nombre.TabIndex = 5;
             this.Nombre.Text = "Nombre";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(57, 96);
+            this.label2.Location = new System.Drawing.Point(76, 118);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 13);
+            this.label2.Size = new System.Drawing.Size(39, 16);
             this.label2.TabIndex = 6;
             this.label2.Text = "Valor";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(31, 143);
+            this.label3.Location = new System.Drawing.Point(41, 176);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 13);
+            this.label3.Size = new System.Drawing.Size(90, 16);
             this.label3.TabIndex = 7;
             this.label3.Text = "Valor residual";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(45, 184);
+            this.label4.Location = new System.Drawing.Point(60, 226);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(44, 13);
+            this.label4.Size = new System.Drawing.Size(54, 16);
             this.label4.TabIndex = 8;
             this.label4.Text = "Vida util";
             // 
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(282, 43);
+            this.dataGridView1.Location = new System.Drawing.Point(376, 53);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
-            this.dataGridView1.Size = new System.Drawing.Size(506, 235);
+            this.dataGridView1.Size = new System.Drawing.Size(675, 289);
             this.dataGridView1.TabIndex = 9;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(557, 418);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(135, 22);
+            this.textBox1.TabIndex = 10;
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1067, 554);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -145,6 +164,7 @@
             this.Controls.Add(this.txtValor);
             this.Controls.Add(this.txtNombre);
             this.Controls.Add(this.txtEnviar);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -166,6 +186,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
