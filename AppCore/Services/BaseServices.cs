@@ -26,9 +26,19 @@ namespace AppCore.Services
             Model.Delete(t);
         }
 
+        public List<T> Find()
+        {
+            throw new NotImplementedException();
+        }
+
         public List<T> Read()
         {
             return Model.Read();
+        }
+
+        public int Update(T t)
+        {
+            return Model.Update(t);
         }
     }
 }

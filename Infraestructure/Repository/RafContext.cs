@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace Infraestructure.Repository
 {
-    public class RAFContext
+    public class RAFContext<T>
     {
         private string fileName;
         private int size;
+        private const string directoryName = "DATA";
+        private string DirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), directoryName);
 
         public RAFContext(string fileName, int size)
         {
@@ -290,33 +292,25 @@ namespace Infraestructure.Repository
             
             return listT;
         }
-        public void Update<T>(T t)
+        public int Update<T>(T t)
         {
-            int Id = (int)t.GetType().GetProperty("Id").GetValue(t);
-            using (BinaryReader brHeader = new BinaryReader(HeaderStream),
-                                brData = new BinaryReader(DataStream))
+            int id;
+            try
             {
-                int n, k;
-                brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
-                if (brHeader.BaseStream.Length == 0)
-                {
-                    n = 0;
-                    k = 0;
-                    return;
-                }
-                n = brHeader.ReadInt32();
-                k = brHeader.ReadInt32();
 
-                using (BinaryWriter bwHeader = new BinaryWriter(HeaderStream),
-                                   bwData = new BinaryWriter(DataStream))
+                id = (int)t.GetType().GetProperty("Id").GetValue(t);
+                int index = BinarySearch(id);
+                if (index < 0)
                 {
-                    PropertyInfo[] propertyInfo = t.GetType().GetProperties();
-                    long posh = 8 + (Id - 1) * 4;
-                    brHeader.BaseStream.Seek(posh, SeekOrigin.Begin);
-                    long index = brHeader.ReadInt32();
-                    long posd = (index - 1) * size;
+                    throw new ArgumentException($"No se encontro un objeto con el Id: {id}");
+                }
+                using (BinaryWriter bwData = new BinaryWriter(DataStream))
+                {
+                    long posd = index * size;
                     bwData.BaseStream.Seek(posd, SeekOrigin.Begin);
-                    foreach (PropertyInfo pinfo in propertyInfo)
+
+                    PropertyInfo[] info = t.GetType().GetProperties();
+                    foreach (PropertyInfo pinfo in info)
                     {
                         Type type = pinfo.PropertyType;
                         object obj = pinfo.GetValue(t, null);
@@ -359,6 +353,11 @@ namespace Infraestructure.Repository
                         }
                     }
                 }
+                return id;
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException($"El objeto {t.GetType().Name} no contiene la propiedad Id");
             }
         }
         public void Delete<T>(T t)
@@ -433,6 +432,39 @@ namespace Infraestructure.Repository
                 throw;
             }
 
+        }
+        private int BinarySearch(int Buscardato)
+        {
+            using (BinaryReader brHeader = new BinaryReader(HeaderStream))
+            {
+                brHeader.BaseStream.Seek(0, SeekOrigin.Begin);       
+                int fin = brHeader.ReadInt32() - 1;
+                int inicio = 0;
+                while (inicio <= fin)
+                {
+                    //
+                    int indiceCentral = Convert.ToInt32(Math.Floor(Convert.ToDouble(inicio + fin) / 2));
+                    brHeader.BaseStream.Seek(8 + 4 * indiceCentral, SeekOrigin.Begin);
+                    int valorCentral = brHeader.ReadInt32();
+                    if (valorCentral == Buscardato)
+                    {
+                        return indiceCentral;
+                    }
+                    if (Buscardato < valorCentral)
+                    {
+                        //brHeader.BaseStream.Seek(-4, SeekOrigin.Current);
+                        //fin = brHeader.Read();
+                        fin = indiceCentral - 1;
+                    }
+                    else
+                    {
+                        //brHeader.BaseStream.Seek(4, SeekOrigin.Current);
+                        //inicio = brHeader.Read();
+                        inicio = indiceCentral + 1;
+                    }
+                }
+                return -1;
+            }
         }
     }
 }

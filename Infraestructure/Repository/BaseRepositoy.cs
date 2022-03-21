@@ -24,9 +24,19 @@ namespace Infraestructure.Repository
             data.Remove(t);
         }
 
+        public List<T> Find()
+        {
+            throw new NotImplementedException();
+        }
+
         public List<T> Read()
         {
             return data;
+        }
+
+        public int Update(T t)
+        {
+            throw new NotImplementedException();
         }
     }
 }

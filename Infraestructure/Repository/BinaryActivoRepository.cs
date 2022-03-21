@@ -11,11 +11,11 @@ namespace Infraestructure.Repository
 {
     public class BinaryActivoRepository : IActivoModel
     {
-        private RAFContext context;
+        private RAFContext<Activo> context;
         private const int SIZE = 119;
         public BinaryActivoRepository()
         {
-            context = new RAFContext("activo", SIZE);
+            context = new RAFContext<Activo>("activo", SIZE);
             
         }
         public void Add(Activo t)
@@ -65,6 +65,16 @@ namespace Infraestructure.Repository
             {
                 throw;
             }
+        }
+
+        public int Update(Activo t)
+        {
+            return context.Update<Activo>(t);
+        }
+
+        public List<Activo> Find()
+        {
+            throw new NotImplementedException();
         }
     }
 }

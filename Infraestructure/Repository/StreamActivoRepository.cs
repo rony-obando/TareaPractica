@@ -57,6 +57,11 @@ namespace Infraestructure.Repository
             throw new NotImplementedException();
         }
 
+        public List<Activo> Find()
+        {
+            throw new NotImplementedException();
+        }
+
         public Activo GetById(int id)
         {
             Activo activo = null;
@@ -135,6 +140,11 @@ namespace Infraestructure.Repository
                 throw;
             }
 
+        }
+
+        public int Update(Activo t)
+        {
+            throw new NotImplementedException();
         }
     }
 }

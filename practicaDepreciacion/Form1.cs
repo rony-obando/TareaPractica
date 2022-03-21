@@ -1,5 +1,6 @@
 ﻿using AppCore.IServices;
 using Domain.Entities;
+using Infraestructure.Repository;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +16,9 @@ namespace practicaDepreciacion
     public partial class Form1 : Form
     {
         IActivoServices activoServices;
+  
+        private int SelecionarId;
+     
         public Form1(IActivoServices ActivoServices)
         {
             this.activoServices = ActivoServices;
@@ -131,5 +135,51 @@ namespace practicaDepreciacion
         {
             dataGridView1.DataSource = activoServices.Read();
         }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            SelecionarId = (int)dataGridView1.Rows[e.RowIndex].Cells[0].Value;
+            MessageBox.Show(SelecionarId.ToString());
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                FrmDepreciacion depreciacion = new FrmDepreciacion(activoServices.Read()[e.RowIndex]);
+                depreciacion.ShowDialog();
+            }
+        }
+
+        private void btnactualizar_Click(object sender, EventArgs e)
+        {
+            bool verficar = verificar();
+            if (verficar == false)
+            {
+                MessageBox.Show("Tienes que llenar todo los cuadros del formulario");
+
+            }
+            else
+            {
+                Activo activo = new Activo()
+                {
+                    Nombre = txtNombre.Text,
+                    Valor = double.Parse(txtValor.Text),
+                    ValorResidual = double.Parse(txtValorR.Text),
+                    VidaUtil = int.Parse(txtVidaU.Text),
+                    Id = SelecionarId
+                };
+                activoServices.Update(activo);
+                dataGridView1.DataSource = null;
+                limpiar();
+                dataGridView1.DataSource = activoServices.Read();
+            }
+
+        }
+
+        private void BtnBorrar_Click(object sender, EventArgs e)
+        {
+      
+        } 
     }
 }
