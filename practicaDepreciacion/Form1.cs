@@ -104,30 +104,17 @@ namespace practicaDepreciacion
         private void limpiar()
         {
             this.txtNombre.Text = String.Empty;
-            this.txtValor.Text = String.Empty;
-            this.txtValorR.Text = String.Empty;
-            this.txtVidaU.Text = String.Empty;
+            this.txtValor.Text = "0.00";
+            this.txtValorR.Text = "0.00";
+            this.txtVidaU.Value = 0;
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
-                Activo activo = new Activo()
-                {
-                    Id = int.Parse(textBox1.Text),
-                    /*Nombre = txtNombre.Text,
-                    Valor = double.Parse(txtValor.Text),
-                    ValorResidual = double.Parse(txtValorR.Text),
-                    VidaUtil = int.Parse(txtVidaU.Text)*/
-                    
-                };
-                textBox1.Text = "";
-                activoServices.Delete(activo);
-                //lo de abajo estaba antes(abria formulario depreciacion)///////////////////////////////////
-                /*FrmDepreciacion depreciacion = new FrmDepreciacion(activoServices.Read()[e.RowIndex]);
-                depreciacion.ShowDialog();*/
-
+                FrmDepreciacion depreciacion = new FrmDepreciacion(activoServices.Read()[e.RowIndex]);
+                depreciacion.ShowDialog();
             }
         }
 
@@ -153,33 +140,47 @@ namespace practicaDepreciacion
 
         private void btnactualizar_Click(object sender, EventArgs e)
         {
-            bool verficar = verificar();
-            if (verficar == false)
+            try
             {
-                MessageBox.Show("Tienes que llenar todo los cuadros del formulario");
-
-            }
-            else
-            {
-                Activo activo = new Activo()
+                bool verficar = verificar();
+                if (verficar == false)
                 {
-                    Nombre = txtNombre.Text,
-                    Valor = double.Parse(txtValor.Text),
-                    ValorResidual = double.Parse(txtValorR.Text),
-                    VidaUtil = int.Parse(txtVidaU.Text),
-                    Id = SelecionarId
-                };
-                activoServices.Update(activo);
-                dataGridView1.DataSource = null;
-                limpiar();
-                dataGridView1.DataSource = activoServices.Read();
+                    MessageBox.Show("Tienes que llenar todo los cuadros del formulario");
+
+                }
+                else
+                {
+                    Activo activo = new Activo()
+                    {
+                        Nombre = txtNombre.Text,
+                        Valor = double.Parse(txtValor.Text),
+                        ValorResidual = double.Parse(txtValorR.Text),
+                        VidaUtil = int.Parse(txtVidaU.Text),
+                        Id = (int)numericUpDown1.Value
+                    };
+                    activoServices.Update(activo);
+                    dataGridView1.DataSource = null;
+                    limpiar();
+                    dataGridView1.DataSource = activoServices.Read();
+                }
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
 
         }
 
         private void BtnBorrar_Click(object sender, EventArgs e)
         {
-      
+            Activo activo = new Activo()
+            {
+                Id = (int)numericUpDown1.Value
+            };
+            numericUpDown1.Value = 0;
+            activoServices.Delete(activo);
+            dataGridView1.DataSource = null;
+            limpiar();
+            dataGridView1.DataSource = activoServices.Read();
         } 
     }
 }

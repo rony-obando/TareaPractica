@@ -127,7 +127,7 @@ namespace Infraestructure.Repository
             {
                 throw;
             }
-           
+
         }
 
         public T Get<T>(int id)
@@ -153,6 +153,10 @@ namespace Infraestructure.Repository
                     //TODO Add Binary search to find the id
                     brHeader.BaseStream.Seek(posh, SeekOrigin.Begin);
                     int index = brHeader.ReadInt32();
+                    if (index == 0)
+                    {
+                        return newValue;
+                    }
                     //TO-DO VALIDATE INDEX
                     long posd = (index - 1) * size;
                     brData.BaseStream.Seek(posd, SeekOrigin.Begin);
@@ -199,7 +203,7 @@ namespace Infraestructure.Repository
                         }
                     }
 
-                    
+
                 }
                 return newValue;
             }
@@ -207,48 +211,54 @@ namespace Infraestructure.Repository
             {
                 throw;
             }
-            
+
 
         }
 
         public List<T> GetAll<T>()
         {
             List<T> listT = new List<T>();
-            int k = 0,n=0;
+            int k = 0, n = 0;
             try
             {
+            using (BinaryReader brHeader = new BinaryReader(HeaderStream))
+            {
+                if (brHeader.BaseStream.Length > 0)
+                {
+                    brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
+                    n = brHeader.ReadInt32();
+                }
+
+            }
+            if (n == 0)
+            {
+                return listT;
+            }
+            for (int i = 0; i < n; i++)
+            {
+                int index;
                 using (BinaryReader brHeader = new BinaryReader(HeaderStream))
                 {
-                    if (brHeader.BaseStream.Length > 0)
-                    {
-                        brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
-                        n = brHeader.ReadInt32();
-                    }
-                    
+                    long posh = 8 + i * 4;
+                    brHeader.BaseStream.Seek(posh, SeekOrigin.Begin);
+                    index = brHeader.ReadInt32();
                 }
-                if (n == 0)
+                if (index == 0)
                 {
-                    return listT;
+                    continue;
                 }
-                for (int i = 0; i < n; i++)
+                else
                 {
-                    int index;
-                    using (BinaryReader brHeader = new BinaryReader(HeaderStream))
-                    {
-                        long posh = 8 + i * 4;
-                        brHeader.BaseStream.Seek(posh, SeekOrigin.Begin);
-                        index = brHeader.ReadInt32();
-                    }
-
                     T t = Get<T>(index);
                     listT.Add(t);
                 }
+            }
             }
             catch (Exception)
             {
                 throw;
             }
-            
+
 
             return listT;
         }
@@ -289,7 +299,7 @@ namespace Infraestructure.Repository
             {
                 throw;
             }
-            
+
             return listT;
         }
         public int Update<T>(T t)
@@ -360,72 +370,23 @@ namespace Infraestructure.Repository
                 throw new ArgumentException($"El objeto {t.GetType().Name} no contiene la propiedad Id");
             }
         }
+
         public void Delete<T>(T t)
         {
             try
             {
                 int Id = (int)t.GetType().GetProperty("Id").GetValue(t);
                 int n = 0;
-                using (BinaryReader brHeader = new BinaryReader(HeaderStream))
+                int pos = 8 + (Id - 1) * 4;
+                using (BinaryWriter brHeader = new BinaryWriter(HeaderStream))
                 {
-                        if (brHeader.BaseStream.Length > 0)
-                        {
-                            brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
-                            n = brHeader.ReadInt32();
-                        }
+                    if (brHeader.BaseStream.Length > 0)
+                    {
+                        brHeader.BaseStream.Seek(pos, SeekOrigin.Begin);
+                        brHeader.Write(0);
+                    }
 
                 }
-                List<int> Ids = new List<int>();
-                for (int i = 0; i < n; i++)
-                {
-                    int index;
-                    using (BinaryReader brHeader = new BinaryReader(HeaderStream))
-                    {
-                        long posh = 8 + i * 4;
-                        brHeader.BaseStream.Seek(posh, SeekOrigin.Begin);
-                        index = brHeader.ReadInt32();
-                    }
-                    Ids.Add(index);
-                }
-                int a = Ids.Count;
-               /* for(int i in a)
-                {*/
-                    if (Ids.Contains(Id))
-                    {
-                        Ids.Remove(Id);
-                    }
-                //}
-                for (int i = 0; i < n; i++)
-                {
-                    if (i != Id - 1)
-                    {
-
-
-                        using (BinaryWriter bwTemporal = new BinaryWriter(TemporalStream))
-                        {
-                            
-                            if (i >= Id-1)
-                            {
-                                long posh = 8 + (--i) * 4;
-                                bwTemporal.BaseStream.Seek(posh, SeekOrigin.Begin);
-                                bwTemporal.Write(++i);
-                                bwTemporal.BaseStream.Seek(0, SeekOrigin.Begin);
-                                bwTemporal.Write(--i);
-                            }
-                            else
-                            {
-                                long posh = 8 + (i) * 4;
-                                bwTemporal.BaseStream.Seek(posh, SeekOrigin.Begin);
-                                bwTemporal.Write(++i);
-                                bwTemporal.BaseStream.Seek(0, SeekOrigin.Begin);
-                                bwTemporal.Write(++i);
-                            }
-                            bwTemporal.Write(++i);
-                        }
-                    }
-                }
-                File.Delete($"{fileName}.hd");
-                File.Copy($"{fileName}.tp", $"{fileName}.hd");
             }
             catch (IOException)
             {
@@ -437,12 +398,11 @@ namespace Infraestructure.Repository
         {
             using (BinaryReader brHeader = new BinaryReader(HeaderStream))
             {
-                brHeader.BaseStream.Seek(0, SeekOrigin.Begin);       
+                brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
                 int fin = brHeader.ReadInt32() - 1;
                 int inicio = 0;
                 while (inicio <= fin)
                 {
-                    //
                     int indiceCentral = Convert.ToInt32(Math.Floor(Convert.ToDouble(inicio + fin) / 2));
                     brHeader.BaseStream.Seek(8 + 4 * indiceCentral, SeekOrigin.Begin);
                     int valorCentral = brHeader.ReadInt32();
@@ -452,14 +412,10 @@ namespace Infraestructure.Repository
                     }
                     if (Buscardato < valorCentral)
                     {
-                        //brHeader.BaseStream.Seek(-4, SeekOrigin.Current);
-                        //fin = brHeader.Read();
                         fin = indiceCentral - 1;
                     }
                     else
                     {
-                        //brHeader.BaseStream.Seek(4, SeekOrigin.Current);
-                        //inicio = brHeader.Read();
                         inicio = indiceCentral + 1;
                     }
                 }
