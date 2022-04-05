@@ -47,12 +47,15 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.nudEmpAsig = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtValor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtValorR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtVidaU)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudEmpAsig)).BeginInit();
             this.SuspendLayout();
             // 
             // txtEnviar
@@ -73,7 +76,6 @@
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(132, 22);
             this.txtNombre.TabIndex = 1;
-            this.txtNombre.TextChanged += new System.EventHandler(this.txtNombre_TextChanged);
             this.txtNombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtNombre_KeyPress);
             this.txtNombre.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtNombre_KeyUp);
             // 
@@ -219,7 +221,6 @@
             this.label5.Size = new System.Drawing.Size(82, 17);
             this.label5.TabIndex = 19;
             this.label5.Text = "Descripción";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // textBox1
             // 
@@ -249,11 +250,29 @@
             this.comboBox1.Size = new System.Drawing.Size(121, 24);
             this.comboBox1.TabIndex = 22;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(335, 374);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(138, 17);
+            this.label7.TabIndex = 23;
+            this.label7.Text = "Empleado Asignado:";
+            // 
+            // nudEmpAsig
+            // 
+            this.nudEmpAsig.Location = new System.Drawing.Point(493, 372);
+            this.nudEmpAsig.Name = "nudEmpAsig";
+            this.nudEmpAsig.Size = new System.Drawing.Size(102, 22);
+            this.nudEmpAsig.TabIndex = 24;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1067, 510);
+            this.Controls.Add(this.nudEmpAsig);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.textBox1);
@@ -280,6 +299,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtVidaU)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.nudEmpAsig)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -306,6 +326,8 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown nudEmpAsig;
     }
 }
 

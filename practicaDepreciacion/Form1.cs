@@ -16,13 +16,12 @@ namespace practicaDepreciacion
     public partial class Form1 : Form
     {
         IActivoServices activoServices;
-        Empleado empleado;
         private int SelecionarId;
-     
-        public Form1(IActivoServices ActivoServices,Empleado empleado)
-        {
-            this.empleado = empleado;
+        IDetalleSE Detalle;
+        public Form1(IActivoServices ActivoServices, IDetalleSE Detalle)
+        {     
             this.activoServices = ActivoServices;
+            this.Detalle = Detalle;
             InitializeComponent();
         }
 
@@ -71,6 +70,7 @@ namespace practicaDepreciacion
 
         private void txtEnviar_Click(object sender, EventArgs e)
         {
+            int id = 0;
             bool verificado = verificar();
             if (verificado == false)
             {
@@ -78,10 +78,7 @@ namespace practicaDepreciacion
             }
             else
             {
-                if (empleado==null)
-                {
-                    throw new ArgumentException("si");
-                }
+               
                 Activo activo = new Activo()
                 {
                     Nombre = txtNombre.Text,
@@ -89,12 +86,22 @@ namespace practicaDepreciacion
                     ValorResidual=double.Parse(txtValorR.Text),
                     VidaUtil= int.Parse(txtVidaU.Text),
                     Descripcion=textBox1.Text,
-                    Empleado=empleado
                 };
                 activoServices.Add(activo);
                 dataGridView1.DataSource = null;
                 limpiar();
                 dataGridView1.DataSource = activoServices.Read();
+                id=dataGridView1.Rows.Count;
+                if (nudEmpAsig.Value != 0)
+                {
+                    DetalleAE detalle = new DetalleAE()
+                    {
+                        IdActivo = id,
+                        IdEmpleado=(int)nudEmpAsig.Value,
+                        DateStart=0
+                    };
+                    Detalle.Add(detalle);
+                }
 
             }
         }
@@ -189,20 +196,6 @@ namespace practicaDepreciacion
             limpiar();
             dataGridView1.DataSource = activoServices.Read();
         }
-
-        private void txtNombre_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+       
     }
 }

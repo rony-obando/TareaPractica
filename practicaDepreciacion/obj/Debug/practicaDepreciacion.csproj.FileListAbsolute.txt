@@ -140,3 +140,4 @@ C:\Users\carlo\OneDrive\Escritorio\zXZ\practicaDepreciacion\obj\Debug\practicaDe
 C:\Users\carlo\OneDrive\Escritorio\zXZ\practicaDepreciacion\obj\Debug\practicaDepreciacion.exe
 C:\Users\carlo\OneDrive\Escritorio\zXZ\practicaDepreciacion\obj\Debug\practicaDepreciacion.pdb
 C:\Users\carlo\OneDrive\Escritorio\zXZ\practicaDepreciacion\obj\Debug\practicaDepreciacion.EmpleadoForm.resources
+C:\Users\carlo\OneDrive\Escritorio\zXZ\practicaDepreciacion\obj\Debug\practicaDepreciacion.HistorialForm.resources

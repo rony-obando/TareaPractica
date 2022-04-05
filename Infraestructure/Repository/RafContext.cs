@@ -37,7 +37,7 @@ namespace Infraestructure.Repository
         {
             get => File.Open($"{fileName}.dat", FileMode.OpenOrCreate, FileAccess.ReadWrite);
         }
-        private object GetClass(object obj,BinaryReader Data)
+        /*private object GetClass(object obj,BinaryReader Data)
         {
             object newValue = Activator.CreateInstance(obj.GetType());
             PropertyInfo[] infos = obj.GetType().GetProperties();
@@ -155,11 +155,12 @@ namespace Infraestructure.Repository
             }
             return newValue;
 
-        }
-        public void Create<T>(T t)
+        }*/
+        public int Create<T>(T t)
         {
             try
             {
+                int id;
                 using (BinaryWriter bwHeader = new BinaryWriter(HeaderStream),
                                  bwData = new BinaryWriter(DataStream))
                 {
@@ -233,13 +234,8 @@ namespace Infraestructure.Repository
                             else if (type == typeof(string))
                             {
                                 bwData.Write((string)obj);
-                            }else if (type.IsClass)
-                            {
-                                //object obj = ;
-                                //int id1 = (int)obj.GetType().GetProperty("Id").GetValue(obj);
-                                GetClass(obj, bwData);
-                                //bwData.Write(id1);
                             }
+                            
                         }
 
                         long posh = 8 + n * 4;
@@ -249,8 +245,10 @@ namespace Infraestructure.Repository
                         bwHeader.BaseStream.Seek(0, SeekOrigin.Begin);
                         bwHeader.Write(++n);
                         bwHeader.Write(k);
+                        id = ++k;
                     }
                 }
+                return id;
             }
             catch (IOException)
             {
@@ -305,7 +303,7 @@ namespace Infraestructure.Repository
                         {
                             pinfo.SetValue(newValue,brData.GetValue<int>(TypeCode.Int32));
                         }
-                        else if (type == typeof(long))
+                        else /*if (type == typeof(long))
                         {
                             pinfo.SetValue(newValue, brData.GetValue<long>(TypeCode.Int64));
                         }
@@ -313,7 +311,7 @@ namespace Infraestructure.Repository
                         {
                             pinfo.SetValue(newValue, brData.GetValue<float>(TypeCode.Single));
                         }
-                        else if (type == typeof(double))
+                        else*/ if (type == typeof(double))
                         {
                             pinfo.SetValue(newValue, brData.GetValue<double>(TypeCode.Double));
                         }
@@ -332,13 +330,6 @@ namespace Infraestructure.Repository
                         else if (type == typeof(string))
                         {
                             pinfo.SetValue(newValue, brData.GetValue<string>(TypeCode.String));
-                        }else if (type.IsClass)
-                        {
-                            GetClass(brData.GetValue<object>(TypeCode.Object), brData);
-                            /*int id1 = (int)brData.GetValue<int>(TypeCode.Int32);
-                            /*object obj = brData.GetValue<object>(TypeCode.Object);
-                            int id1 = (int)obj.GetType().GetProperty("Id").GetValue(obj);*/
-                            //pinfo.SetValue(newValue, Get<object>(id1));*/
                         }
                     }
 

@@ -15,7 +15,6 @@ namespace Domain.Entities
         public int VidaUtil { get; set; }
         public double ValorResidual { get; set; }
         public string Descripcion { get; set; }
-        public Empleado Empleado { get; set; }
         public EstadoAct Estado { get; set; }
 
     }

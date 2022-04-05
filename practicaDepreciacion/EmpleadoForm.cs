@@ -17,10 +17,13 @@ namespace practicaDepreciacion
     {
         IEmpleadoServices empleado;
         IActivoServices activoServices;
-        public EmpleadoForm(IEmpleadoServices empleadoServices, IActivoServices ActivoServices)
+        IDetalleSE Detalle;
+        char l = 'E';
+        public EmpleadoForm(IEmpleadoServices empleadoServices, IActivoServices ActivoServices,IDetalleSE detalle)
         {
             this.activoServices = ActivoServices;
             empleado = empleadoServices;
+            Detalle = detalle;
             InitializeComponent();
         }
         private void Limpiar()
@@ -35,7 +38,7 @@ namespace practicaDepreciacion
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            //int a = cmbEstado.SelectedIndex;
+            int id = 0;
             Empleado empleado1 = new Empleado()
             {
                 Nombres = txtNombres.Text,
@@ -51,6 +54,16 @@ namespace practicaDepreciacion
             dgvView.DataSource = null;
             Limpiar();
             dgvView.DataSource = empleado.Read();
+            if (nudIdAct.Value != 0)
+            {
+                DetalleAE detalle = new DetalleAE()
+                {
+                    IdActivo = (int)nudIdAct.Value,
+                    IdEmpleado = id,
+                    DateStart = 0
+                };
+                Detalle.Add(detalle);
+            }
         }
 
         private void EmpleadoForm_Load(object sender, EventArgs e)
@@ -60,11 +73,19 @@ namespace practicaDepreciacion
 
         private void dgvView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0)
-            {
-                Form1 activo = new Form1(activoServices,empleado.GetById(1));
-                activo.ShowDialog();
-            }
+            
+        }
+
+        private void btnAcivo_Click(object sender, EventArgs e)
+        {
+            Form1 activo = new Form1(activoServices,Detalle);
+            activo.ShowDialog();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            HistorialForm historial = new HistorialForm(Detalle);
+            historial.ShowDialog();
         }
     }
 }
