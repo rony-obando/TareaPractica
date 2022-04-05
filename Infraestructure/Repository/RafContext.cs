@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -36,7 +37,125 @@ namespace Infraestructure.Repository
         {
             get => File.Open($"{fileName}.dat", FileMode.OpenOrCreate, FileAccess.ReadWrite);
         }
+        private object GetClass(object obj,BinaryReader Data)
+        {
+            object newValue = Activator.CreateInstance(obj.GetType());
+            PropertyInfo[] infos = obj.GetType().GetProperties();
+            
+            foreach (PropertyInfo pinfo in infos)
+            {
+                Type type = pinfo.PropertyType;
+                if(!type.IsPrimitive && type.IsClass && type != Type.GetType("System.String"))
+                {
+                    object j = pinfo.PropertyType;
+                    pinfo.SetValue(newValue,GetClass(j,Data));
+                }
+                if (type.IsGenericType)
+                {
+                    continue;
+                }
 
+                if (type == typeof(int))
+                {
+                    pinfo.SetValue(newValue, Data.GetValue<int>(TypeCode.Int32));
+                }
+                else if (type.IsEnum)
+                {
+                    pinfo.SetValue(newValue, Data.GetValue<int>(TypeCode.Int32));
+                }
+                else if (type == typeof(long))
+                {
+                    pinfo.SetValue(newValue, Data.GetValue<long>(TypeCode.Int64));
+                }
+                else if (type == typeof(float))
+                {
+                    pinfo.SetValue(newValue, Data.GetValue<float>(TypeCode.Single));
+                }
+                else if (type == typeof(double))
+                {
+                    pinfo.SetValue(newValue, Data.GetValue<double>(TypeCode.Double));
+                }
+                else if (type == typeof(decimal))
+                {
+                    pinfo.SetValue(newValue, Data.GetValue<decimal>(TypeCode.Decimal));
+                }
+                else if (type == typeof(char))
+                {
+                    pinfo.SetValue(newValue, Data.GetValue<char>(TypeCode.Char));
+                }
+                else if (type == typeof(bool))
+                {
+                    pinfo.SetValue(newValue, Data.GetValue<bool>(TypeCode.Boolean));
+                }
+                else if (type == typeof(string))
+                {
+                    pinfo.SetValue(newValue, Data.GetValue<string>(TypeCode.String));
+                }
+                
+            }
+            return newValue;
+
+        }
+        private object GetClass(object obj, BinaryWriter Data)
+        {
+            object newValue = Activator.CreateInstance(obj.GetType());
+            PropertyInfo[] infos = obj.GetType().GetProperties();
+
+            foreach (PropertyInfo pinfo in infos)
+            {
+                Type type = pinfo.PropertyType;
+                object obj1 = pinfo.GetValue(obj, null);
+                if (!type.IsPrimitive && type.IsClass && type != Type.GetType("System.String"))
+                {
+                    object j = pinfo.PropertyType;
+                    pinfo.SetValue(newValue, GetClass(j, Data));
+                }
+                if (type.IsGenericType)
+                {
+                    continue;
+                }
+
+                if (type == typeof(int))
+                {
+                    Data.Write((int)obj1);
+                }
+                else if (type.IsEnum)
+                {
+                    Data.Write((int)obj1);
+                }
+                else if (type == typeof(long))
+                {
+                    Data.Write((long)obj1);
+                }
+                else if (type == typeof(float))
+                {
+                    Data.Write((float)obj1);
+                }
+                else if (type == typeof(double))
+                {
+                    Data.Write((double)obj1);
+                }
+                else if (type == typeof(decimal))
+                {
+                    Data.Write((decimal)obj);
+                }
+                else if (type == typeof(char))
+                {
+                    Data.Write((char)obj1);
+                }
+                else if (type == typeof(bool))
+                {
+                    Data.Write((bool)obj1);
+                }
+                else if (type == typeof(string))
+                {
+                    Data.Write((string)obj1);
+                }
+
+            }
+            return newValue;
+
+        }
         public void Create<T>(T t)
         {
             try
@@ -83,6 +202,10 @@ namespace Infraestructure.Repository
                             {
                                 bwData.Write((int)obj);
                             }
+                            else if (type.IsEnum)
+                            {
+                                bwData.Write((int)obj);
+                            }
                             else if (type == typeof(long))
                             {
                                 bwData.Write((long)obj);
@@ -110,6 +233,12 @@ namespace Infraestructure.Repository
                             else if (type == typeof(string))
                             {
                                 bwData.Write((string)obj);
+                            }else if (type.IsClass)
+                            {
+                                //object obj = ;
+                                //int id1 = (int)obj.GetType().GetProperty("Id").GetValue(obj);
+                                GetClass(obj, bwData);
+                                //bwData.Write(id1);
                             }
                         }
 
@@ -172,6 +301,9 @@ namespace Infraestructure.Repository
                         if (type == typeof(int))
                         {
                             pinfo.SetValue(newValue, brData.GetValue<int>(TypeCode.Int32));
+                        }else if (type.IsEnum)
+                        {
+                            pinfo.SetValue(newValue,brData.GetValue<int>(TypeCode.Int32));
                         }
                         else if (type == typeof(long))
                         {
@@ -200,6 +332,13 @@ namespace Infraestructure.Repository
                         else if (type == typeof(string))
                         {
                             pinfo.SetValue(newValue, brData.GetValue<string>(TypeCode.String));
+                        }else if (type.IsClass)
+                        {
+                            GetClass(brData.GetValue<object>(TypeCode.Object), brData);
+                            /*int id1 = (int)brData.GetValue<int>(TypeCode.Int32);
+                            /*object obj = brData.GetValue<object>(TypeCode.Object);
+                            int id1 = (int)obj.GetType().GetProperty("Id").GetValue(obj);*/
+                            //pinfo.SetValue(newValue, Get<object>(id1));*/
                         }
                     }
 

@@ -16,11 +16,12 @@ namespace practicaDepreciacion
     public partial class Form1 : Form
     {
         IActivoServices activoServices;
-  
+        Empleado empleado;
         private int SelecionarId;
      
-        public Form1(IActivoServices ActivoServices)
+        public Form1(IActivoServices ActivoServices,Empleado empleado)
         {
+            this.empleado = empleado;
             this.activoServices = ActivoServices;
             InitializeComponent();
         }
@@ -77,13 +78,18 @@ namespace practicaDepreciacion
             }
             else
             {
-
+                if (empleado==null)
+                {
+                    throw new ArgumentException("si");
+                }
                 Activo activo = new Activo()
                 {
                     Nombre = txtNombre.Text,
                     Valor = double.Parse(txtValor.Text),
                     ValorResidual=double.Parse(txtValorR.Text),
-                    VidaUtil= int.Parse(txtVidaU.Text)
+                    VidaUtil= int.Parse(txtVidaU.Text),
+                    Descripcion=textBox1.Text,
+                    Empleado=empleado
                 };
                 activoServices.Add(activo);
                 dataGridView1.DataSource = null;
@@ -121,6 +127,7 @@ namespace practicaDepreciacion
         private void Form1_Load(object sender, EventArgs e)
         {
             dataGridView1.DataSource = activoServices.Read();
+           // dataGridView1.DataSource = empleado;
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -181,6 +188,21 @@ namespace practicaDepreciacion
             dataGridView1.DataSource = null;
             limpiar();
             dataGridView1.DataSource = activoServices.Read();
-        } 
+        }
+
+        private void txtNombre_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
