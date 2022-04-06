@@ -16,9 +16,16 @@ namespace AppCore.Services
         {
             Detalle = model;
         }
+
+        public List<Activo> GetActivos(int idemp)
+        {
+            return Detalle.GetActivos(idemp);
+        }
+
         public DetalleAE GetById(int id)
         {
             return Detalle.GetById(id);
         }
+
     }
 }

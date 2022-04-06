@@ -92,12 +92,16 @@ namespace practicaDepreciacion
                 limpiar();
                 dataGridView1.DataSource = activoServices.Read();
                 id=dataGridView1.Rows.Count;
+                Empleado empleado = new Empleado()
+                {
+                    Id = (int)nudEmpAsig.Value
+                };
                 if (nudEmpAsig.Value != 0)
                 {
                     DetalleAE detalle = new DetalleAE()
                     {
-                        IdActivo = id,
-                        IdEmpleado=(int)nudEmpAsig.Value,
+                        IdActivo = activoServices.GetById(id),
+                        IdEmpleado=empleado,
                         DateStart=0
                     };
                     Detalle.Add(detalle);

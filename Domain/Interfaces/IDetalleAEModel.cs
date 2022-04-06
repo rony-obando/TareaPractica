@@ -10,5 +10,6 @@ namespace Domain.Interfaces
     public interface IDetalleAEModel:IModel<DetalleAE>
     {
         DetalleAE GetById(int id);
+        List<Activo> GetActivos(int idemp);
     }
 }

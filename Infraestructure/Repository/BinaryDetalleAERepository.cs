@@ -10,11 +10,11 @@ namespace Infraestructure.Repository
 {
     public class BinaryDetalleAERepository : IDetalleAEModel
     {
-        private RAFContext<DetalleAE> context;
+        private RAFContext context;
         private const int SIZE = 30;
         public BinaryDetalleAERepository()
         {
-            context = new RAFContext<DetalleAE>("detalle", SIZE);
+            context = new RAFContext("detalle", SIZE);
         }
         public void Add(DetalleAE t)
         {
@@ -33,7 +33,7 @@ namespace Infraestructure.Repository
         {
             try
             {
-                context.Delete<DetalleAE>(t);
+                context.Delete(t.Id);
             }
             catch (Exception)
             {
@@ -81,5 +81,17 @@ namespace Infraestructure.Repository
                 throw;
             }
         }
+
+
+        public List<Activo> GetActivos(int idemp)
+        {
+            List<Activo> activos = new List<Activo>();
+            foreach (int a in context.Get<Empleado>(idemp).activos)
+            {
+                activos.Add(context.Get<Activo>(a));
+            }
+            return activos;
+        }
+        
     }
 }

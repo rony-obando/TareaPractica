@@ -11,11 +11,11 @@ namespace Infraestructure.Repository
 {
     public class BinaryEmpleadoRepository : IEmpleadoModel
     {
-        private RAFContext<Empleado> context;
+        private RAFContext context;
         private const int SIZE = 576;
         public BinaryEmpleadoRepository()
         {
-            context = new RAFContext<Empleado>("empleado", SIZE);
+            context = new RAFContext("empleado", SIZE);
         }
         public void Add(Empleado t)
         {
@@ -33,7 +33,7 @@ namespace Infraestructure.Repository
         {
             try
             {
-                context.Delete<Empleado>(t);
+                context.Delete(t.Id);
             }
             catch (IOException)
             {

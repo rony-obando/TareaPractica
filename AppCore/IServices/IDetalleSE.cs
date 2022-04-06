@@ -10,5 +10,6 @@ namespace AppCore.IServices
     public interface IDetalleSE:IServices<DetalleAE>
     {
         DetalleAE GetById(int id);
+       List<Activo> GetActivos(int idemp);
     }
 }

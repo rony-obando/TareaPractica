@@ -50,20 +50,30 @@ namespace practicaDepreciacion
                 Estado=(Estado)cmbEstado.SelectedIndex
                 
             };
-            empleado.Add(empleado1);
-            dgvView.DataSource = null;
-            Limpiar();
-            dgvView.DataSource = empleado.Read();
             if (nudIdAct.Value != 0)
             {
                 DetalleAE detalle = new DetalleAE()
                 {
-                    IdActivo = (int)nudIdAct.Value,
-                    IdEmpleado = id,
+                    IdActivo = activoServices.GetById((int)nudIdAct.Value),
+                    IdEmpleado = empleado.GetById(dgvView.Rows.Count),
                     DateStart = 0
                 };
                 Detalle.Add(detalle);
+                if (empleado1.activos == null)
+                {
+                    empleado1.activos = new List<int>();
+                    empleado1.activos.Add((int)nudIdAct.Value);
+                }
+                else
+                {
+                    empleado1.activos.Add((int)nudIdAct.Value);
+                }
             }
+            
+            empleado.Add(empleado1);
+            dgvView.DataSource = null;
+            Limpiar();
+            dgvView.DataSource = empleado.Read();
         }
 
         private void EmpleadoForm_Load(object sender, EventArgs e)
@@ -73,7 +83,11 @@ namespace practicaDepreciacion
 
         private void dgvView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            
+            int SelecionarId = (int)dgvView.Rows[e.RowIndex].Cells[0].Value;
+            dgvView.DataSource = Detalle.GetActivos(SelecionarId);
+            int c= Detalle.GetActivos(SelecionarId).Count;
+            int b = 0;
+
         }
 
         private void btnAcivo_Click(object sender, EventArgs e)

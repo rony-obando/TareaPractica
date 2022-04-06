@@ -9,8 +9,8 @@ namespace Domain.Entities
     public class DetalleAE
     {
         public int Id { get; set; }
-        public int IdActivo { get; set; }
-        public int IdEmpleado { get; set; }
+        public Activo IdActivo { get; set; }
+        public Empleado IdEmpleado { get; set; }
         public long DateStart { get; set; }
     }
 }
