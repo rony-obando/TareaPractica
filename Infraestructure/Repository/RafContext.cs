@@ -249,10 +249,10 @@ namespace Infraestructure.Repository
             {
 
                 T newValue = (T)Activator.CreateInstance(typeof(T));
-                
-                if (nameof(newValue)=="DetalleAE")//GetName<T>(()=>newValue)=="DetalleAE")
+                if (nameof(newValue)=="DetalleAE")
                 {
-
+                    int Id1 = int.Parse(newValue
+                .GetType().GetProperty("IdActivo").GetValue(newValue).ToString());
                 }
                 using (BinaryReader brHeader = new BinaryReader(HeaderStream),
                                     brData = new BinaryReader(DataStream))
@@ -382,7 +382,14 @@ namespace Infraestructure.Repository
             {
                 return null;
             }
+
             object Object = Activator.CreateInstance(t.GetType());
+            int Id1 = 0;
+            if (nameof(t) == "Activo")
+            {
+                Id1 = int.Parse(t
+            .GetType().GetProperty("Id").GetValue(t).ToString());
+            }
             PropertyInfo[] infoClass = t.GetType().GetProperties();
             foreach (PropertyInfo pInfoClass in infoClass)
             {

@@ -86,9 +86,28 @@ namespace Infraestructure.Repository
         public List<Activo> GetActivos(int idemp)
         {
             List<Activo> activos = new List<Activo>();
-            foreach (int a in context.Get<Empleado>(idemp).activos)
+            List<int> Ids = new List<int>();
+            BinaryActivoRepository binaryActivo = new BinaryActivoRepository();
+            BinaryEmpleadoRepository binaryEmpleado = new BinaryEmpleadoRepository();
+            for (int i=0;i<Read().Count;i++)
             {
-                activos.Add(context.Get<Activo>(a));
+                if (Read()[i].IdEmpleado.Id==idemp)
+                {
+                    if (Ids.Count >= 1)
+                    {
+                        for(int j = 0; j < Ids.Count; j++) { 
+                        if (Ids[j]!=Read()[j].IdActivo.Id)
+                        {
+                                activos.Add(binaryActivo.GetById(Read()[i].IdActivo.Id));
+                        }
+                        }
+                    }
+                    else
+                    {
+                        activos.Add(binaryActivo.GetById(Read()[i].IdActivo.Id));
+                        Ids.Add(Read()[i].IdActivo.Id);
+                    }
+                }
             }
             return activos;
         }
